@@ -37,6 +37,18 @@ class Dijkstra {
 
   // setter
   public addVertex(vertex: Vertex): void {
+    /**
+     * LIMITATION OF DIJKSTRA'S ALGORITHM:
+     *
+     * Dijkstra's algorithm fails when there are negative edges
+     * We need to throw an error if user inputs an edge with negative weights
+     */
+    vertex.destVertices.forEach((v: DestinationVertex) => {
+      if (v.weightOfEdge < 0) {
+        throw new Error("Negative weights are not allowed!!!");
+      }
+    });
+
     this.vertices[vertex.name] = vertex;
   }
 
@@ -88,6 +100,7 @@ class Dijkstra {
   }
 
   // after finding shortest path from main algorithm (populating this.vertices with the appropriate weights), print out path with intermediate nodes
+  // we need to start iterating from the back since there could be nodes with smaller computed weights from the start node that are not in the shortest path
   private findPointsOfShortestWay(start: string, finish: string): string[] {
     let nextVertex: string = finish;
     let arrayWithVertex: string[] = [];
