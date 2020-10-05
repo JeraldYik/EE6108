@@ -2,18 +2,19 @@
 
 class DestinationVertex {
   nameOfDestVertex: string;
-  weight: number;
+  weightOfEdge: number;
 }
 
 export class Vertex {
   name: string;
   nodes: DestinationVertex[];
-  weight: number;
+  weightFromStart: number;
 
-  constructor(name: string, nodes: DestinationVertex[], weight: number) {
+  constructor(name: string, nodes: DestinationVertex[]) {
     this.name = name;
     this.nodes = nodes;
-    this.weight = weight;
+    // initialise weights of all nodes to be +inf first, weight of start node will be set later
+    this.weightFromStart = Number.MAX_VALUE;
   }
 }
 
@@ -27,6 +28,7 @@ interface IVertex {
 
 class Dijkstra {
   vertices: IVertexWithEdges;
+
   constructor() {
     this.vertices = {};
   }
@@ -42,8 +44,11 @@ class Dijkstra {
       let minWeight: number = Number.MAX_VALUE;
       let minVertex: string = "";
       this.vertices[nextVertex].nodes.forEach((v: DestinationVertex) => {
-        if (v.weight + this.vertices[v.nameOfDestVertex].weight < minWeight) {
-          minWeight = this.vertices[v.nameOfDestVertex].weight;
+        if (
+          v.weightOfEdge + this.vertices[v.nameOfDestVertex].weightFromStart <
+          minWeight
+        ) {
+          minWeight = this.vertices[v.nameOfDestVertex].weightFromStart;
           minVertex = v.nameOfDestVertex;
         }
       });
@@ -58,28 +63,31 @@ class Dijkstra {
 
     Object.keys(this.vertices).forEach((key: string) => {
       if (this.vertices[key].name === start) {
-        this.vertices[key].weight = 0;
-      } else {
-        this.vertices[key].weight = Number.MAX_VALUE;
+        // initialise weight of start node to be 0
+        this.vertices[key].weightFromStart = 0;
       }
-      nodes[this.vertices[key].name] = this.vertices[key].weight;
+      nodes[this.vertices[key].name] = this.vertices[key].weightFromStart;
     });
 
     while (Object.keys(nodes).length !== 0) {
       let sortedVisitedByWeight: string[] = Object.keys(nodes).sort(
-        (a, b) => this.vertices[a].weight - this.vertices[b].weight
+        (a, b) =>
+          this.vertices[a].weightFromStart - this.vertices[b].weightFromStart
       );
       let currentVertex: Vertex = this.vertices[sortedVisitedByWeight[0]];
       currentVertex.nodes.forEach((n: DestinationVertex) => {
-        const calculateWeight: number = currentVertex.weight + n.weight;
-        if (calculateWeight < this.vertices[n.nameOfDestVertex].weight) {
-          this.vertices[n.nameOfDestVertex].weight = calculateWeight;
+        const calculateWeight: number =
+          currentVertex.weightFromStart + n.weightOfEdge;
+        if (
+          calculateWeight < this.vertices[n.nameOfDestVertex].weightFromStart
+        ) {
+          this.vertices[n.nameOfDestVertex].weightFromStart = calculateWeight;
         }
       });
       delete nodes[sortedVisitedByWeight[0]];
     }
 
-    const finishWeight: number = this.vertices[finish].weight;
+    const finishWeight: number = this.vertices[finish].weightFromStart;
     let arrayWithVertex: string[] = this.findPointsOfShortestWay(
       start,
       finish
