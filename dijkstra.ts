@@ -18,10 +18,12 @@ export class Vertex {
   }
 }
 
+// { name : Vertex}
 interface IVertexWithEdges {
   [name: string]: Vertex;
 }
 
+// { name : weightFromStart}
 interface IVertex {
   [name: string]: number;
 }
@@ -33,11 +35,12 @@ class Dijkstra {
     this.vertices = {};
   }
 
-  addVertex(vertex: Vertex): void {
+  // setter
+  public addVertex(vertex: Vertex): void {
     this.vertices[vertex.name] = vertex;
   }
 
-  findPointsOfShortestWay(start: string, finish: string): string[] {
+  private findPointsOfShortestWay(start: string, finish: string): string[] {
     let nextVertex: string = finish;
     let arrayWithVertex: string[] = [];
     while (nextVertex !== start) {
@@ -58,7 +61,7 @@ class Dijkstra {
     return arrayWithVertex;
   }
 
-  findShortestWay(start: string, finish: string): string[] {
+  public findShortestWay(start: string, finish: string): string[] {
     let nodes: IVertex = {};
 
     Object.keys(this.vertices).forEach((key: string) => {
