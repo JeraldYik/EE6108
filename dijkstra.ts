@@ -7,12 +7,12 @@ class DestinationVertex {
 
 export class Vertex {
   name: string;
-  nodes: DestinationVertex[];
+  destVertices: DestinationVertex[];
   weightFromStart: number;
 
-  constructor(name: string, nodes: DestinationVertex[]) {
+  constructor(name: string, destVertices: DestinationVertex[]) {
     this.name = name;
-    this.nodes = nodes;
+    this.destVertices = destVertices;
     // initialise weights of all nodes to be +inf first, weight of start node will be set later
     this.weightFromStart = Number.MAX_VALUE;
   }
@@ -43,7 +43,7 @@ class Dijkstra {
     while (nextVertex !== start) {
       let minWeight: number = Number.MAX_VALUE;
       let minVertex: string = "";
-      this.vertices[nextVertex].nodes.forEach((v: DestinationVertex) => {
+      this.vertices[nextVertex].destVertices.forEach((v: DestinationVertex) => {
         if (
           v.weightOfEdge + this.vertices[v.nameOfDestVertex].weightFromStart <
           minWeight
@@ -75,7 +75,7 @@ class Dijkstra {
           this.vertices[a].weightFromStart - this.vertices[b].weightFromStart
       );
       let currentVertex: Vertex = this.vertices[sortedVisitedByWeight[0]];
-      currentVertex.nodes.forEach((n: DestinationVertex) => {
+      currentVertex.destVertices.forEach((n: DestinationVertex) => {
         const calculateWeight: number =
           currentVertex.weightFromStart + n.weightOfEdge;
         if (
