@@ -61,6 +61,7 @@ class Dijkstra {
     return arrayWithVertex;
   }
 
+  // main algorithm
   public findShortestWay(start: string, finish: string): string[] {
     let nodes: IVertex = {};
 
@@ -69,15 +70,19 @@ class Dijkstra {
         // initialise weight of start node to be 0
         this.vertices[key].weightFromStart = 0;
       }
+      // populate object (queue) of nodes to be worked on
       nodes[this.vertices[key].name] = this.vertices[key].weightFromStart;
     });
 
     while (Object.keys(nodes).length !== 0) {
+      // sort object and make it into a queue nodes of increasing weights
       let sortedVisitedByWeight: string[] = Object.keys(nodes).sort(
         (a, b) =>
           this.vertices[a].weightFromStart - this.vertices[b].weightFromStart
       );
+
       let currentVertex: Vertex = this.vertices[sortedVisitedByWeight[0]];
+      // for all edges (u,v) where u = currentVertex
       currentVertex.destVertices.forEach((n: DestinationVertex) => {
         const calculateWeight: number =
           currentVertex.weightFromStart + n.weightOfEdge;
@@ -87,6 +92,8 @@ class Dijkstra {
           this.vertices[n.nameOfDestVertex].weightFromStart = calculateWeight;
         }
       });
+
+      // delete from queue
       delete nodes[sortedVisitedByWeight[0]];
     }
 
