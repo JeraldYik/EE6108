@@ -1,0 +1,28 @@
+{
+  "name": "ee6108",
+  "version": "1.0.0",
+  "description": "In this project, each student will work to implement 2 routing algorithms, which are Bellman- Ford Algorithm and Dijkstra’s Algorithm. Any programming language can be used to generate the codes. The submission of the project should include 1) one original program file and the corresponding executable file, 2) a testing file, which includes a testing input and corresponding output, and 3) a project report.",
+  "main": "driver.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "main": "ts-node ./driver.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JeraldYik/EE6108.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/JeraldYik/EE6108/issues"
+  },
+  "homepage": "https://github.com/JeraldYik/EE6108#readme",
+  "dependencies": {
+    "ts-node": "^9.0.0",
+    "typescript": "^4.0.3"
+  },
+  "watch": "src/**/*.ts",
+  "execMap": {
+    "ts": "ts-node"
+  }
+}
