@@ -52,4 +52,4 @@ dijkstra.addVertex(
     { nameOfDestVertex: "F", weightOfEdge: 3 },
   ])
 );
-console.log(dijkstra.findShortestWay("A", "F"));
+console.log(dijkstra.findShortestPath("A", "F"));
