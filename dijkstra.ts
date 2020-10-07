@@ -20,38 +20,13 @@
  *          decreasekey(H,v)
  */
 
-class DestinationVertex {
-  nameOfDestVertex: string;
-  weightOfEdge: number;
-}
-
-export class Vertex {
-  name: string;
-  destVertices: DestinationVertex[];
-  weightFromStart: number;
-
-  constructor(name: string, destVertices: DestinationVertex[]) {
-    this.name = name;
-    this.destVertices = destVertices;
-    // initialise dist(u) = +inf first, weight of start node will be set later
-    this.weightFromStart = Number.MAX_VALUE;
-  }
-}
-
-// { name : { vertex; name; }}
-interface IVertexWithEdges {
-  [name: string]: IVertexWithEdgesInfo;
-}
-
-interface IVertexWithEdgesInfo {
-  vertex: Vertex;
-  nameOfPrev: string;
-}
-
-// { name : weightFromStart}
-interface IVertex {
-  [name: string]: number;
-}
+import {
+  DestinationVertex,
+  Vertex,
+  IVertexWithEdges,
+  IVertexWithEdgesInfo,
+  IVertex,
+} from "./definitions";
 
 class Dijkstra {
   vertices: IVertexWithEdges;
@@ -107,21 +82,21 @@ class Dijkstra {
       let currentVertex: Vertex = this.vertices[sortedVisitedByWeight[0]]
         .vertex;
       // for all edges (u,v) \in E, where u = currentVertex
-      currentVertex.destVertices.forEach((n: DestinationVertex) => {
+      currentVertex.destVertices.forEach((dest: DestinationVertex) => {
         // calculateWeight = dist(u) + l(u,v)
         const calculateWeight: number =
-          currentVertex.weightFromStart + n.weightOfEdge;
+          currentVertex.weightFromStart + dest.weightOfEdge;
         // if dist (v) > dist(u) + l(u,v); calculateWeight < dist(v)
         if (
           calculateWeight <
-          this.vertices[n.nameOfDestVertex].vertex.weightFromStart
+          this.vertices[dest.nameOfDestVertex].vertex.weightFromStart
         ) {
           // dist(v) = dist(u) + l(u,v); dist(v) = calculateWeight
           this.vertices[
-            n.nameOfDestVertex
+            dest.nameOfDestVertex
           ].vertex.weightFromStart = calculateWeight;
           // prev(u) = u
-          this.vertices[n.nameOfDestVertex].nameOfPrev = currentVertex.name;
+          this.vertices[dest.nameOfDestVertex].nameOfPrev = currentVertex.name;
         }
       });
 
