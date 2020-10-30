@@ -44,7 +44,7 @@ class BellmanFord {
 
   // main algorithm
   public findShortestPath(start: string, finish: string): IResult {
-    // MAKE A COPY of this.vertices to make multiple queries
+    // MAKE A COPY of this.vertices to make allow queries
     const pool: IVertexWithEdges = _.cloneDeep(this.vertices);
 
     Object.keys(this.vertices).forEach((key: string) => {

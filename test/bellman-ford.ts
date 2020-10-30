@@ -1,8 +1,12 @@
-import { Vertex, __addDestVerticesToPool } from "../definitions";
+import { Vertex, _addDestVerticesToPool } from "../definitions";
 import BellmanFord from "../bellman-ford";
 
+/**
+ * Structure of graph can be found in sample-graph.pdf
+ */
 console.log("===== Bellman's Ford =====");
-console.log("Expected output (path, total weight): [ [ 'A', 'C', 'E', 'D', 'F' ], 5 ]");
+console.log('Graph input => A: C -3 E 7 B 4,B: A 4 C 6 D 5,C: B 6 E 8 D 11,D: B 5 C 11 E 2 F -2,E: A 7 C 8 D 2,G: D 10 E -5 F -3');
+console.log("Expected output Path A->F (path, total weight): [ [ 'A', 'C', 'E', 'D', 'F' ], 5 ]");
 const bellmanFord = new BellmanFord();
 bellmanFord.addVertex(
   new Vertex("A", [
@@ -41,9 +45,6 @@ bellmanFord.addVertex(
   ])
 );
 bellmanFord.addVertex(
-  new Vertex("F", [])
-);
-bellmanFord.addVertex(
   new Vertex("G", [
     { nameOfDestVertex: "D", weightOfEdge: 10 },
     { nameOfDestVertex: "E", weightOfEdge: -5 },
@@ -60,4 +61,4 @@ bellmanFord.addVertex(
   ])
 );
 console.log("Expected Output: Error is thrown for negative cycle");
-console.log("Actual Output: ", bellmanFord.findShortestPath("A", "F"));
+console.log("Actual Output Path A->F: ", bellmanFord.findShortestPath("A", "F"));

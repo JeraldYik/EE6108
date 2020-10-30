@@ -60,7 +60,7 @@ class Dijkstra {
 
   // main algorithm
   public findShortestPath(start: string, finish: string): IResult {
-    // MAKE A COPY of this.vertices to make multiple queries
+    // MAKE A COPY of this.vertices to allow multiple queries
     const pool: IVertexWithEdges = _.cloneDeep(this.vertices);
     // H = makequeue(V); queue : object
     let nodes: IVertex = {};
@@ -119,13 +119,8 @@ class Dijkstra {
 
   // after finding shortest path from main algorithm (populating this.vertices with the appropriate weights), print out path with intermediate nodes using nameOfPrev attribute
   private mapShortestPath(start: string, finish: string, pool: IVertexWithEdges): string[] {
-    // console.log(pool, this.vertices);
     let nextVertex: string = finish;
     let arrayWithVertex: string[] = [];
-    // console.log(nextVertex, pool[nextVertex])
-    // Object.values(pool).forEach(v => {
-    //   console.log(v);
-    // })
     while (nextVertex !== start) {
       let nextVertexObj: IVertexWithEdgesInfo | null = pool[nextVertex]
         ? pool[nextVertex]
