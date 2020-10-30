@@ -47,23 +47,23 @@ class BellmanFord {
     // MAKE A COPY of this.vertices to make allow queries
     const pool: IVertexWithEdges = _.cloneDeep(this.vertices);
 
-    Object.keys(this.vertices).forEach((key: string) => {
-      if (this.vertices[key].vertex.name === start) {
+    Object.keys(pool).forEach((key: string) => {
+      if (pool[key].vertex.name === start) {
         // dist(s) = 0; initialise weight of start node to be 0
-        this.vertices[key].vertex.weightFromStart = 0;
+        pool[key].vertex.weightFromStart = 0;
       } else {
         // dist(u) = +inf; initialise weight of rest of nodes to be +inf
-        this.vertices[key].vertex.weightFromStart = Number.MAX_VALUE;
+        pool[key].vertex.weightFromStart = Number.MAX_VALUE;
       }
     });
 
-    const V: number = Object.keys(this.vertices).length;
+    const V: number = Object.keys(pool).length;
     // repeat |V|-1 times
     for (var i: number = 0; i < V - 1; i++) {
       // for all (u,v) \in E:
-      Object.keys(this.vertices).forEach((key: string) => {
-        // u = this.vertices.name, v=this.vertices[key].vertex.destVertices[i].nameOfDestVertex
-        const currentVertex: Vertex = this.vertices[key].vertex;
+      Object.keys(pool).forEach((key: string) => {
+        // u = pool.name, v = pool[key].vertex.destVertices[i].nameOfDestVertex
+        const currentVertex: Vertex = pool[key].vertex;
         // for all edges (u,v) \in E, where u = currentVertex
         currentVertex.destVertices.forEach((dest: DestinationVertex) => {
           // calculateWeight = dist(u) + l(u,v)
@@ -72,14 +72,14 @@ class BellmanFord {
           // if dist (v) > dist(u) + l(u,v); calculateWeight < dist(v)
           if (
             calculateWeight <
-            this.vertices[dest.nameOfDestVertex].vertex.weightFromStart
+            pool[dest.nameOfDestVertex].vertex.weightFromStart
           ) {
             // dist(v) = dist(u) + l(u,v); dist(v) = calculateWeight
-            this.vertices[
+            pool[
               dest.nameOfDestVertex
             ].vertex.weightFromStart = calculateWeight;
             // prev(u) = u
-            this.vertices[dest.nameOfDestVertex].nameOfPrev =
+            pool[dest.nameOfDestVertex].nameOfPrev =
               currentVertex.name;
           }
         });
@@ -91,9 +91,9 @@ class BellmanFord {
      * If there is any decrease in weightFromStart of any node, there exist a negative cycle
      */
 
-    Object.keys(this.vertices).forEach((key: string) => {
-      // u = this.vertices.name, v=this.vertices[key].vertex.destVertices[i].nameOfDestVertex
-      const currentVertex: Vertex = this.vertices[key].vertex;
+    Object.keys(pool).forEach((key: string) => {
+      // u = pool.name, v=pool[key].vertex.destVertices[i].nameOfDestVertex
+      const currentVertex: Vertex = pool[key].vertex;
       // for all edges (u,v) \in E, where u = currentVertex
       currentVertex.destVertices.forEach((dest: DestinationVertex) => {
         // calculateWeight = dist(u) + l(u,v)
@@ -102,28 +102,28 @@ class BellmanFord {
         // if dist (v) > dist(u) + l(u,v); calculateWeight < dist(v)
         if (
           calculateWeight <
-          this.vertices[dest.nameOfDestVertex].vertex.weightFromStart
+          pool[dest.nameOfDestVertex].vertex.weightFromStart
         ) {
           throw new Error("There exist a negative cycle!!!");
         }
       });
     });
 
-    const finishWeight: number = this.vertices[finish].vertex.weightFromStart;
-    let arrayWithVertex: string[] = this.mapShortestPath(start, finish);
+    const finishWeight: number = pool[finish].vertex.weightFromStart;
+    let arrayWithVertex: string[] = this.mapShortestPath(start, finish, pool);
     arrayWithVertex.push(finish);
 
     return {shortestPath: arrayWithVertex, smallestWeightOfPath: finishWeight};
   }
 
-  // after finding shortest path from main algorithm (populating this.vertices with the appropriate weights), print out path with intermediate nodes using nameOfPrev attribute
-  private mapShortestPath(start: string, finish: string): string[] {
+  // after finding shortest path from main algorithm (populating pool with the appropriate weights), print out path with intermediate nodes using nameOfPrev attribute
+  private mapShortestPath(start: string, finish: string, pool: IVertexWithEdges): string[] {
     let nextVertex: string = finish;
     let arrayWithVertex: string[] = [];
 
     while (nextVertex !== start) {
-      let nextVertexObj: IVertexWithEdgesInfo | null = this.vertices[nextVertex]
-        ? this.vertices[nextVertex]
+      let nextVertexObj: IVertexWithEdgesInfo | null = pool[nextVertex]
+        ? pool[nextVertex]
         : null;
       if (nextVertexObj) {
         nextVertex = nextVertexObj.nameOfPrev;
