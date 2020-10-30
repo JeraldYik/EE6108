@@ -35,34 +35,21 @@ export interface IVertex {
   [name: string]: number;
 }
 
-// helper function
-export const _isVertexIn = (vertices: IVertexWithEdges, nameOfVertex: string) => {
-  Object.keys(vertices).forEach((key: string) => {
-    if (nameOfVertex === key) {
-      return true;
-    }
-  });
-  return false;
+export interface IResult {
+  shortestPath: string[];
+  smallestWeightOfPath: number;
 }
 
-// helper function
-export const _addEdgeToVertex = (vertices: IVertexWithEdges, _nameOfVertex: string, _nameOfDestVertex: string, _weightOfEdge: number): IVertexWithEdges => {
-  Object.keys(vertices).forEach((key: string) => {
-    if (_nameOfVertex === key) {
-      vertices[key].vertex.addEdge({ nameOfDestVertex: _nameOfDestVertex, weightOfEdge: _weightOfEdge });
-      vertices = _addDestVertexToPool(vertices, vertices[_nameOfVertex].vertex);
-    }
+// add remaining vertices into pool
+export const _addDestVerticesToPool = (vertices: IVertexWithEdges): void => {
+  Object.values(vertices).forEach((v: IVertexWithEdgesInfo) => {
+    v.vertex.destVertices.forEach((d: DestinationVertex) => {
+      if (!vertices[d.nameOfDestVertex]) {
+        vertices[d.nameOfDestVertex] = { vertex: null, nameOfPrev: null };
+        vertices[d.nameOfDestVertex].vertex = new Vertex(d.nameOfDestVertex, []);
+      }
+    })
   });
-  return vertices;
 }
 
-// helper function
-export const _addDestVertexToPool = (vertices: IVertexWithEdges, originVertex: Vertex): IVertexWithEdges => {
-  originVertex.destVertices.forEach((dest: DestinationVertex) => {
-    if (!vertices[dest.nameOfDestVertex]) {
-      vertices[dest.nameOfDestVertex] = { vertex: null, nameOfPrev: null };
-      vertices[dest.nameOfDestVertex].vertex = new Vertex(dest.nameOfDestVertex, []);;
-    }
-  });
-  return vertices;
-}
+

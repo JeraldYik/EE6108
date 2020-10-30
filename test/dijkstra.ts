@@ -55,6 +55,8 @@ dijkstra.addVertex(
     { nameOfDestVertex: "F", weightOfEdge: 3 },
   ])
 );
+dijkstra.addDestVerticesToPool();
+
 console.log("Actual Output: ", dijkstra.findShortestPath("A", "F"));
 console.log("Testing when a negative edge exist in the graph...");
 dijkstra.addVertex(

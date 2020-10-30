@@ -1,4 +1,4 @@
-import { Vertex } from "../definitions";
+import { Vertex, __addDestVerticesToPool } from "../definitions";
 import BellmanFord from "../bellman-ford";
 
 console.log("===== Bellman's Ford =====");
@@ -50,14 +50,14 @@ bellmanFord.addVertex(
     { nameOfDestVertex: "F", weightOfEdge: -3 },
   ])
 );
-console.log("Actual Output: ", bellmanFord.findShortestPath("A", "F"));
-
-console.log("\n\nTesting out helper method addEdgeToVertex()...");
-bellmanFord.addEdgeToVertex("C", "F", 1);
-console.log("Expected output (path, total weight): [ [ 'A', 'C', 'F' ], -2 ]");
+bellmanFord.addDestVerticesToPool();
 console.log("Actual Output: ", bellmanFord.findShortestPath("A", "F"));
 
 console.log("\n\nTesting when a negative cycle exist in the graph...");
-bellmanFord.addEdgeToVertex("F", "G", -20);
+bellmanFord.addVertex(
+  new Vertex("F", [
+    { nameOfDestVertex: "G", weightOfEdge: -20 }
+  ])
+);
 console.log("Expected Output: Error is thrown for negative cycle");
 console.log("Actual Output: ", bellmanFord.findShortestPath("A", "F"));

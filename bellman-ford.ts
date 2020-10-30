@@ -22,10 +22,11 @@ import {
   Vertex,
   IVertexWithEdges,
   IVertexWithEdgesInfo,
-  _isVertexIn,
-  _addEdgeToVertex,
-  _addDestVertexToPool
+  IResult,
+  _addDestVerticesToPool
 } from "./definitions";
+
+const _ = require('lodash');
 
 class BellmanFord {
   vertices: IVertexWithEdges;
@@ -34,23 +35,17 @@ class BellmanFord {
     this.vertices = {};
   }
 
-  // setter
+  // setter (NOTE: this will overwrite existing vertex, if any)
   public addVertex(vertex: Vertex): void {
     // prev(u) = null;
     this.vertices[vertex.name] = { vertex: null, nameOfPrev: null };
     this.vertices[vertex.name].vertex = vertex;
-
-    // add destination vertex into pool of vertices
-    this.vertices = _addDestVertexToPool(this.vertices, vertex);
-  }
-
-  // helper function
-  public addEdgeToVertex(_nameOfVertex: string, _nameOfDestVertex: string, _weightOfEdge: number) {
-    this.vertices = _addEdgeToVertex(this.vertices, _nameOfVertex, _nameOfDestVertex, _weightOfEdge);
   }
 
   // main algorithm
-  public findShortestPath(start: string, finish: string): [string[], number] {
+  public findShortestPath(start: string, finish: string): IResult {
+    // MAKE A COPY of this.vertices to make multiple queries
+    const pool: IVertexWithEdges = _.cloneDeep(this.vertices);
 
     Object.keys(this.vertices).forEach((key: string) => {
       if (this.vertices[key].vertex.name === start) {
@@ -118,7 +113,7 @@ class BellmanFord {
     let arrayWithVertex: string[] = this.mapShortestPath(start, finish);
     arrayWithVertex.push(finish);
 
-    return [arrayWithVertex, finishWeight];
+    return {shortestPath: arrayWithVertex, smallestWeightOfPath: finishWeight};
   }
 
   // after finding shortest path from main algorithm (populating this.vertices with the appropriate weights), print out path with intermediate nodes using nameOfPrev attribute
@@ -138,6 +133,10 @@ class BellmanFord {
       }
     }
     return arrayWithVertex.reverse();
+  }
+
+  public addDestVerticesToPool(): void {
+    _addDestVerticesToPool(this.vertices);
   }
 }
 

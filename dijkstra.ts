@@ -26,10 +26,11 @@ import {
   IVertexWithEdges,
   IVertexWithEdgesInfo,
   IVertex,
-  _isVertexIn,
-  _addEdgeToVertex,
-  _addDestVertexToPool
+  IResult,
+  _addDestVerticesToPool
 } from "./definitions";
+
+const _ = require('lodash');
 
 class Dijkstra {
   vertices: IVertexWithEdges;
@@ -55,28 +56,22 @@ class Dijkstra {
     // prev(u) = null;
     this.vertices[vertex.name] = { vertex: null, nameOfPrev: null };
     this.vertices[vertex.name].vertex = vertex;
-
-   // add destination vertex into pool of vertices
-    this.vertices = _addDestVertexToPool(this.vertices, vertex);
-  }
-
-  // helper function
-  public addEdgeToVertex(_nameOfVertex: string, _nameOfDestVertex: string, _weightOfEdge: number) {
-    this.vertices = _addEdgeToVertex(this.vertices, _nameOfVertex, _nameOfDestVertex, _weightOfEdge);
   }
 
   // main algorithm
-  public findShortestPath(start: string, finish: string): [string[], number] {
+  public findShortestPath(start: string, finish: string): IResult {
+    // MAKE A COPY of this.vertices to make multiple queries
+    const pool: IVertexWithEdges = _.cloneDeep(this.vertices);
     // H = makequeue(V); queue : object
     let nodes: IVertex = {};
 
-    Object.keys(this.vertices).forEach((key: string) => {
-      if (this.vertices[key].vertex.name === start) {
+    Object.keys(pool).forEach((key: string) => {
+      if (pool[key].vertex.name === start) {
         // initialise weight of start node to be 0
-        this.vertices[key].vertex.weightFromStart = 0;
+        pool[key].vertex.weightFromStart = 0;
       }
       // populate queue of nodes to be worked on
-      nodes[this.vertices[key].vertex.name] = this.vertices[
+      nodes[pool[key].vertex.name] = pool[
         key
       ].vertex.weightFromStart;
     });
@@ -86,11 +81,11 @@ class Dijkstra {
       // sort object and make it into a queue nodes of increasing weights
       let sortedVisitedByWeight: string[] = Object.keys(nodes).sort(
         (a, b) =>
-          this.vertices[a].vertex.weightFromStart -
-          this.vertices[b].vertex.weightFromStart
+          pool[a].vertex.weightFromStart -
+          pool[b].vertex.weightFromStart
       );
       
-      let currentVertex: Vertex = this.vertices[sortedVisitedByWeight[0]]
+      let currentVertex: Vertex = pool[sortedVisitedByWeight[0]]
         .vertex;
       // for all edges (u,v) \in E, where u = currentVertex
       currentVertex.destVertices.forEach((dest: DestinationVertex) => {
@@ -100,14 +95,14 @@ class Dijkstra {
         // if dist (v) > dist(u) + l(u,v); calculateWeight < dist(v)
         if (
           calculateWeight <
-          this.vertices[dest.nameOfDestVertex].vertex.weightFromStart
+          pool[dest.nameOfDestVertex].vertex.weightFromStart
         ) {
           // dist(v) = dist(u) + l(u,v); dist(v) = calculateWeight
-          this.vertices[
+          pool[
             dest.nameOfDestVertex
           ].vertex.weightFromStart = calculateWeight;
           // prev(u) = u
-          this.vertices[dest.nameOfDestVertex].nameOfPrev = currentVertex.name;
+          pool[dest.nameOfDestVertex].nameOfPrev = currentVertex.name;
         }
       });
 
@@ -115,35 +110,39 @@ class Dijkstra {
       delete nodes[sortedVisitedByWeight[0]];
     }
 
-    const finishWeight: number = this.vertices[finish].vertex.weightFromStart;
-    let arrayWithVertex: string[] = this.mapShortestPath(start, finish);
+    const finishWeight: number = pool[finish].vertex.weightFromStart;
+    let arrayWithVertex: string[] = this.mapShortestPath(start, finish, pool);
     arrayWithVertex.push(finish);
 
-    return [arrayWithVertex, finishWeight];
+    return {shortestPath: arrayWithVertex, smallestWeightOfPath: finishWeight};
   }
 
   // after finding shortest path from main algorithm (populating this.vertices with the appropriate weights), print out path with intermediate nodes using nameOfPrev attribute
-  private mapShortestPath(start: string, finish: string): string[] {
+  private mapShortestPath(start: string, finish: string, pool: IVertexWithEdges): string[] {
+    // console.log(pool, this.vertices);
     let nextVertex: string = finish;
     let arrayWithVertex: string[] = [];
-
+    // console.log(nextVertex, pool[nextVertex])
+    // Object.values(pool).forEach(v => {
+    //   console.log(v);
+    // })
     while (nextVertex !== start) {
-      let nextVertexObj: IVertexWithEdgesInfo | null = this.vertices[nextVertex]
-        ? this.vertices[nextVertex]
+      let nextVertexObj: IVertexWithEdgesInfo | null = pool[nextVertex]
+        ? pool[nextVertex]
         : null;
       if (nextVertexObj) {
         nextVertex = nextVertexObj.nameOfPrev;
         arrayWithVertex.push(nextVertex);
       } else {
-        throw new Error("Cannot find previous vertex!!");
+        throw new Error("No path available!!");
       }
     }
     return arrayWithVertex.reverse();
   }
 
-  public v(): IVertexWithEdges {
-    return this.vertices;
-  } 
+  public addDestVerticesToPool(): void {
+    _addDestVerticesToPool(this.vertices);
+  }
 }
 
 export default Dijkstra;
