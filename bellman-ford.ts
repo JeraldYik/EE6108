@@ -22,7 +22,9 @@ import {
   Vertex,
   IVertexWithEdges,
   IVertexWithEdgesInfo,
-  IVertex,
+  _isVertexIn,
+  _addEdgeToVertex,
+  _addDestVertexToPool
 } from "./definitions";
 
 class BellmanFord {
@@ -37,10 +39,19 @@ class BellmanFord {
     // prev(u) = null;
     this.vertices[vertex.name] = { vertex: null, nameOfPrev: null };
     this.vertices[vertex.name].vertex = vertex;
+
+    // add destination vertex into pool of vertices
+    this.vertices = _addDestVertexToPool(this.vertices, vertex);
+  }
+
+  // helper function
+  public addEdgeToVertex(_nameOfVertex: string, _nameOfDestVertex: string, _weightOfEdge: number) {
+    this.vertices = _addEdgeToVertex(this.vertices, _nameOfVertex, _nameOfDestVertex, _weightOfEdge);
   }
 
   // main algorithm
-  public findShortestPath(start: string, finish: string): string[] {
+  public findShortestPath(start: string, finish: string): [string[], number] {
+
     Object.keys(this.vertices).forEach((key: string) => {
       if (this.vertices[key].vertex.name === start) {
         // dist(s) = 0; initialise weight of start node to be 0
@@ -105,9 +116,9 @@ class BellmanFord {
 
     const finishWeight: number = this.vertices[finish].vertex.weightFromStart;
     let arrayWithVertex: string[] = this.mapShortestPath(start, finish);
-    arrayWithVertex.push(finish, finishWeight.toString());
+    arrayWithVertex.push(finish);
 
-    return arrayWithVertex;
+    return [arrayWithVertex, finishWeight];
   }
 
   // after finding shortest path from main algorithm (populating this.vertices with the appropriate weights), print out path with intermediate nodes using nameOfPrev attribute
