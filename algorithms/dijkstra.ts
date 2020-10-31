@@ -28,7 +28,7 @@ import {
   IVertex,
   IResult,
   _addDestVerticesToPool
-} from "./definitions";
+} from "../definitions";
 
 const _ = require('lodash');
 

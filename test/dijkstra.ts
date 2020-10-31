@@ -1,5 +1,5 @@
 import { Vertex } from "../definitions";
-import Dijkstra from "../dijkstra";
+import Dijkstra from "../algorithms/dijkstra";
 
 /**
  * Structure of graph can be found in sample-graph.pdf

@@ -1,5 +1,5 @@
 import { Vertex, _addDestVerticesToPool } from "../definitions";
-import BellmanFord from "../bellman-ford";
+import BellmanFord from "../algorithms/bellman-ford";
 
 /**
  * Structure of graph can be found in sample-graph.pdf

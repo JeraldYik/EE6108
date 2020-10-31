@@ -1,6 +1,6 @@
 import { Vertex } from "./definitions";
-import Dijkstra from "./dijkstra";
-import BellmanFord from "./bellman-ford";
+import Dijkstra from "./algorithms/dijkstra";
+import BellmanFord from "./algorithms/bellman-ford";
 
 const prompt = require('prompt-sync')({sigint: true});
 
