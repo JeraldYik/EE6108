@@ -4,9 +4,9 @@ import Dijkstra from "../dijkstra";
 /**
  * Structure of graph can be found in sample-graph.pdf
  */
-console.log('===== Dijkstra =====');
+console.log('====================== Dijkstra Test File ======================');
 console.log('Graph input => A: C 3 E 7 B 4,B: A 4 C 6 D 5,C: A 3 B 6 E 8 D 11,D: B 5 C 11 E 2 F 2,E: A 7 C 8 D 2 G 5,F: D 2 G 3,G: D 10 E 5 F 3');
-console.log("Expected output Path A->F (path, total weight): [ [ 'A', 'B', 'D', 'F' ], 11 ]");
+console.log("Expected output Path A->F (path, total weight): { shortestPath: [ 'A', 'B', 'D', 'F' ], smallestWeightOfPath: 11 }");
 const dijkstra = new Dijkstra();
 dijkstra.addVertex(
   new Vertex("A", [
@@ -62,10 +62,11 @@ dijkstra.addVertex(
 dijkstra.addDestVerticesToPool();
 
 console.log("Actual Output: ", dijkstra.findShortestPath("A", "F"));
-console.log("Testing when a negative edge exist in the graph...");
+console.log("\n\nTesting when a negative edge exist in the graph...");
+console.log("Expected Output: Error is thrown for negative edge")
 dijkstra.addVertex(
   new Vertex("H", [
     { nameOfDestVertex: "G", weightOfEdge: -10 }
   ])
 );
-console.log("Expected Output: Error is thrown")
+

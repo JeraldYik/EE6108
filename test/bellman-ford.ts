@@ -4,9 +4,9 @@ import BellmanFord from "../bellman-ford";
 /**
  * Structure of graph can be found in sample-graph.pdf
  */
-console.log("===== Bellman's Ford =====");
+console.log("====================== Bellman-Ford Test File ======================");
 console.log('Graph input => A: C -3 E 7 B 4,B: A 4 C 6 D 5,C: B 6 E 8 D 11,D: B 5 C 11 E 2 F -2,E: A 7 C 8 D 2,G: D 10 E -5 F -3');
-console.log("Expected output Path A->F (path, total weight): [ [ 'A', 'C', 'E', 'D', 'F' ], 5 ]");
+console.log("Expected output Path A->F (path, total weight): { shortestPath: [ 'A', 'C', 'E', 'D', 'F' ], smallestWeightOfPath: 5 }");
 const bellmanFord = new BellmanFord();
 bellmanFord.addVertex(
   new Vertex("A", [
